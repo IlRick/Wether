@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Wether.Classes;
 
 namespace Wether
 {
@@ -19,6 +20,7 @@ namespace Wether
         public MainWindow()
         {
             InitializeComponent();
+            GetWether.Get(58.009671f, 56.226184f);
         }
     }
 }
