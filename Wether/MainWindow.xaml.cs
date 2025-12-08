@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Wether.Classes;
+using Wether.Model;
 
 namespace Wether
 {
@@ -17,10 +18,25 @@ namespace Wether
     /// </summary>
     public partial class MainWindow : Window
     {
+        DataResponse response;
         public MainWindow()
         {
             InitializeComponent();
-            GetWether.Get(58.009671f, 56.226184f);
+            Init();
+        }
+
+        public async void Init()
+        {
+            response = await GetWether.Get(58.009671f, 56.226184f);
+            Create(0);
+            
+        }
+        public void Create(int idForecast)
+        {
+            foreach (Hour hour in response.forecasts[idForecast].hours)
+            {
+                parent.Children.Add(new Elements.Item(hour));
+            }
         }
     }
 }
