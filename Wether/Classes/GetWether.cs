@@ -34,7 +34,7 @@ namespace Wether.Classes
         }
         public static class GeoCoder
         {
-            public static string Key = "6dfde514-ac61-4e72-9cc0-c8e588d0194f";
+            public static string Key = "67cd1532-2c21-4201-8586-c5e5ce8b3b56";
 
             public static async Task<(float lat, float lon)> GetCoords(string city)
             {

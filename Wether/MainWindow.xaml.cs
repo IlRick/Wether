@@ -37,13 +37,9 @@ namespace Wether
 
             await LoadWeather(city);
         }
-
-        // ------------------------- ЗАГРУЗКА ПОГОДЫ -------------------------
         private async Task LoadWeather(string city)
         {
             string json;
-
-            // 1) Проверяем кэш
             if (CacheService.TryGetWeather(city, out json))
             {
                 response = JsonConvert.DeserializeObject<DataResponse>(json);
@@ -53,16 +49,9 @@ namespace Wether
 
             try
             {
-                // 2) Получаем координаты
                 var (lat, lon) = await GetWether.GeoCoder.GetCoords(city);
-
-                // 3) Запрашиваем данные у API
                 json = await GetWether.GetJson(lat, lon);
-
-                // 4) Сохраняем в БД
                 CacheService.SaveWeather(city, json);
-
-                // 5) Загружаем в приложение
                 response = JsonConvert.DeserializeObject<DataResponse>(json);
 
                 UpdateUI();
@@ -73,7 +62,6 @@ namespace Wether
             }
         }
 
-        // --------------------- ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ---------------------
         private void UpdateUI()
         {
             Days.Items.Clear();
@@ -85,7 +73,6 @@ namespace Wether
             Create(0);
         }
 
-        // ------------------------ ЗАПОЛНЕНИЕ ЧАСОВ ------------------------
         public void Create(int idForecast)
         {
             parent.Children.Clear();
