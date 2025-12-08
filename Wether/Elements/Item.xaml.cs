@@ -26,7 +26,10 @@ namespace Wether.Elements
             InitializeComponent();
 
             lHour.Content=hour.hour;
-
+            lCondition.Content=hour.ToCondition();
+            lHumidity.Content = hour.humidity + "%";
+            lPrecType.Content = hour.ToPrecType();
+            lTemp.Content = hour.temp+ "*";
         }
     }
 }
