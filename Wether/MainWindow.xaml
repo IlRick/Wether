@@ -12,9 +12,17 @@
             SelectionChanged="SelectDays"
             VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" Margin="10"/>
         <Button Content="Обновить данные" Width="200" Margin="0,10,10,0" VerticalAlignment="top" HorizontalAlignment="Right" Click="UpdateWeather"  />
+        <TextBox x:Name="CityBox" Width="200" Height="25" Margin="229,10,0,0"
+         VerticalAlignment="Top" HorizontalAlignment="Left"
+         Text="Введите город" />
+
+        <Button Content="Найти" Width="100" Height="25"
+        Margin="456,8,0,0"
+        VerticalAlignment="Top" HorizontalAlignment="Left"
+        Click="FindCity" />
         <ScrollViewer Margin="10,37,10,10">
             <StackPanel x:Name="parent">
-                
+
             </StackPanel>
         </ScrollViewer>
     </Grid>

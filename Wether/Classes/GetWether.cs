@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Wether.Model;
 
@@ -16,29 +13,49 @@ namespace Wether.Classes
 
         public static async Task<DataResponse> Get(float lat, float lon)
         {
-            DataResponse response = null;
-            string url = $"{Url}?last={lat}&lon={lon}".Replace(",", ".");
+            string json = await GetJson(lat, lon);
+            return JsonConvert.DeserializeObject<DataResponse>(json);
+        }
+        public static async Task<string> GetJson(float lat, float lon)
+        {
+            // Исправлено: lat вместо last
+            string url = $"{Url}?lat={lat}&lon={lon}".Replace(",", ".");
+
             using (HttpClient Client = new HttpClient())
+            using (HttpRequestMessage Request = new HttpRequestMessage(HttpMethod.Get, url))
             {
-                using (HttpRequestMessage Request = new HttpRequestMessage(HttpMethod.Get, url))
+                Request.Headers.Add("X-Yandex-Weather-Key", key);
+
+                using (var Response = await Client.SendAsync(Request))
                 {
-                    Request.Headers.Add("X-Yandex-Weather-Key", key);
-                    
-                    using (var Response = await Client.SendAsync(Request))
-                    {
-                        string DataResponse = await Response.Content.ReadAsStringAsync();
-
-                        response = JsonConvert.DeserializeObject<DataResponse>(DataResponse);
-                    }
-
+                    return await Response.Content.ReadAsStringAsync();
                 }
-
             }
-            return response;
-        }   
+        }
+        public static class GeoCoder
+        {
+            public static string Key = "6dfde514-ac61-4e72-9cc0-c8e588d0194f";
+
+            public static async Task<(float lat, float lon)> GetCoords(string city)
+            {
+                string url =
+                    $"https://geocode-maps.yandex.ru/1.x/?apikey={Key}&format=json&geocode={city}";
+
+                using HttpClient client = new HttpClient();
+                string json = await client.GetStringAsync(url);
+
+                dynamic data = JsonConvert.DeserializeObject(json);
+
+                string pos = data.response.GeoObjectCollection.featureMember[0]
+                    .GeoObject.Point.pos;
+                var parts = pos.Split(' ');
+
+                float lon = float.Parse(parts[0], System.Globalization.CultureInfo.InvariantCulture);
+                float lat = float.Parse(parts[1], System.Globalization.CultureInfo.InvariantCulture);
+
+                return (lat, lon);
+            }
+        }
+
     }
 }
-
-
-
-
